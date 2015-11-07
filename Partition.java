@@ -34,9 +34,9 @@ public class Partition
 			nodePolarCoord[2]=distance;
 			
 			angleArray.add(nodePolarCoord);
-			System.out.println(angle);
+			//System.out.println(angle);
 		}
-		
+
 		List<double[]> sortedAngleArray= new ArrayList<double[]>();
 		sortedAngleArray.addAll(bubbleSort(angleArray));
 
@@ -54,8 +54,7 @@ public class Partition
 		sortedAngleArray.addAll(subList2);
 		sortedAngleArray.addAll(subList1);
 		
-		
-		for(int i=0;i<sortedAngleArray.size()-1;i++)
+		for(int i=0;i<sortedAngleArray.size();i++)
 		{
 			foodSource.add((int)sortedAngleArray.get(i)[0]);
 		}	
@@ -143,6 +142,7 @@ public class Partition
 		List<Integer> L= new ArrayList<Integer>();
 
 		L.addAll(Partition.sweepPartition());
+		System.out.println(L.size());
 		
 		Print.printList(L);
 	}
