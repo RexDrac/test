@@ -43,7 +43,28 @@ public class Food
 			node.add(i+1);//node number starts from 1;
 		}
 		foodSource.add(1);//depot node is depicted as node 1
+
+		//partition method
+		List<Integer> temp = new ArrayList<Integer>();
+		temp.addAll(Partition.sweepPartition());
 		
+		for(int i=0;i<temp.size();i++)
+		{
+			int nodeNum;
+			nodeNum=temp.get(i);
+			if((usedCapacity+CVRPData.getDemand(nodeNum)+Configuration.CAPACITY_REDUNDANCY)<CVRPData.VEHICLE_CAPACITY)
+			{
+				foodSource.add(nodeNum);
+				usedCapacity+=CVRPData.getDemand(nodeNum);
+			}
+			else
+			{
+				foodSource.add(1);//assign another vehicle if the former vehicle is full
+				usedCapacity=0;//reset
+			}
+		}
+		//random initialization method
+		/*
 		int i=1;// first node is depot node, allocation starts from the second customer node
 		do
 		{
@@ -52,7 +73,7 @@ public class Food
 			nodeNum=node.get(index);
 			if((usedCapacity+CVRPData.getDemand(nodeNum)+Configuration.CAPACITY_REDUNDANCY)<CVRPData.VEHICLE_CAPACITY)
 			{
-				foodSource.add(node.get(index));
+				foodSource.add(nodeNum);
 				node.remove(index);
 				usedCapacity+=CVRPData.getDemand(nodeNum);
 				i+=1;
@@ -63,14 +84,7 @@ public class Food
 				usedCapacity=0;//reset
 			}
 		}while(i<size);
-		/*
-		for(int i=1;i<size;i++)
-		{
-			int index = randomInt(1,node.size());//first node is depot node
-			this.foodSource.add(node.get(index));
-			node.remove(index);
-		}
-		*/
+*/
 		foodSource.add(1);//depot node is depicted as node 1
 
 		setFoodSource(foodSource);
@@ -654,6 +668,8 @@ public class Food
 
 		CVRPData.readFile("fruitybun250.vrp");
 		food.initializeFood(CVRPData.NUM_NODES);
+		System.out.println(food.foodSource.size());
+		System.out.println(food.vehicleNum);
 		Print.printList(food.foodSource);
 		
 		System.out.println(food.cost);
