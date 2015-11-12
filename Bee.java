@@ -22,8 +22,8 @@ import java.util.Collections;
 
 public class Bee
 {
-	private List<Food> foodSourceList = new ArrayList<Food>();
-	private List<Integer> bestSolution= new ArrayList<Integer>();
+	public List<Food> foodSourceList = new ArrayList<Food>();
+	public List<Integer> bestSolution= new ArrayList<Integer>();
 	public int solutionVehicleNum=0;
 	public double lowestCost = 10000000;
 	private static Random random = new Random(System.currentTimeMillis());
@@ -191,18 +191,28 @@ public class Bee
 			if(foodSourceList.get(i).iteration>Configuration.ITERATION_LIM)
 			{
 				newFoodSource.addAll(Operator.combined(this.bestSolution));
-				foodSourceList.get(i).setFoodSource(newFoodSource);
+				//newFoodSource.addAll(Operator.combinedAll(this.bestSolution));
+				//foodSourceList.get(i).setFoodSource(newFoodSource);
 				//changed in 2015/11/6 23:45
-				
-				if(random.nextBoolean())
+				if(random.nextDouble()<Configuration.RANDOM_EXPLORE_RATE)
+					foodSourceList.get(i).initializeFood(CVRPData.NUM_NODES);
+				else
 				{
-					Food.insertQueenNode(foodSourceList.get(i).foodSource);					
+				double rand = random.nextDouble();
+				if(rand<Configuration.INSERT_DEPOT_RATE)
+				{
+					foodSourceList.get(i).setFoodSource(Food.insertQueenNode(newFoodSource));				
+				}
+				else if(rand<(Configuration.INSERT_DEPOT_RATE+Configuration.REMOVE_DEPOT_RATE))
+				{
+					foodSourceList.get(i).setFoodSource(Food.removeQueenNode(newFoodSource));
 				}
 				else
 				{
-					Food.removeQueenNode(foodSourceList.get(i).foodSource);
+					//foodSourceList.get(i).setFoodSource(Operator.combined(newFoodSource));
+					foodSourceList.get(i).setFoodSource(newFoodSource);
 				}
-				
+				}
 			}
 			/*
 			if(foodSourceList.get(i).iteration>maxIteration)
