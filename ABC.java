@@ -23,7 +23,10 @@ public class ABC
 		
 		Bee beeColony =new Bee();
 		beeColony.initializeBees();
-		
+		beeColony.foodSourceList.get(0).setFoodSource(Print.readResult("best-solution.txt"));	
+		Print.printList(beeColony.foodSourceList.get(0).foodSource);
+		System.out.println(beeColony.foodSourceList.get(0).cost);
+			
 		System.out.println("-----------------------");
 		System.out.println("Current Lowest Cost: "+ Double.toString(beeColony.lowestCost)+"\t"+"Current Vehicle Num: "+ Integer.toString(beeColony.solutionVehicleNum));
 		System.out.println("Invalid Results: "+ Integer.toString(beeColony.invalidFoodNum)+"\t"+"Alpha: "+Double.toString(Configuration.ALPHA));
@@ -33,18 +36,19 @@ public class ABC
 			beeColony.employedBees();
 			beeColony.onlookerBees();
 			beeColony.scoutBees();
-			if(i%1000==0)
-				//beeColony.depotNodeArrange();
+
+
 			beeColony.searchBestSolution();
 			
 			timeNow= Calendar.getInstance();
 			
 			//print computing results every 100 iterations
-			if(i%1000==1)
+			if(i%3000==1)
 			{
 				System.out.println("-----------------------runtime: "+Integer.toString(hour)+" hours: "+Integer.toString(minute)+" minutes: "+Integer.toString(second)+" seconds:"+"----------------------------");
 				System.out.println("Epoch: "+Long.toString(i)+"\t"+"Current Lowest Cost: "+ Double.toString(beeColony.lowestCost)+"\t"+"Current Vehicle Num: "+ Integer.toString(beeColony.solutionVehicleNum));
 				System.out.println("Invalid Results: "+ Integer.toString(beeColony.invalidFoodNum)+"\t"+"Alpha: "+Double.toString(Configuration.ALPHA));
+				System.out.println("Best Solution length: "+ Integer.toString(beeColony.bestSolution.size()));
 			}
 			
 			//if the runtime of the program has reached its limit, terminate program
@@ -68,14 +72,18 @@ public class ABC
 				System.out.println("-----------------------runtime: "+Integer.toString(hour)+" hours: "+Integer.toString(minute)+" minutes: "+Integer.toString(second)+" seconds:"+"----------------------------");
 				System.out.println("Epoch: "+Long.toString(i)+"\t"+"Current Lowest Cost: "+ Double.toString(beeColony.lowestCost)+"\t"+"Current Vehicle Num: "+ Integer.toString(beeColony.solutionVehicleNum));
 				System.out.println("Invalid Results: "+ Integer.toString(beeColony.invalidFoodNum)+"\t"+"Alpha: "+Double.toString(Configuration.ALPHA));
+				System.out.println("Best Solution length: "+ Integer.toString(beeColony.bestSolution.size()));
 				break;
 			}
 		}
-
+		Print.printList(beeColony.bestSolution);
+		String description="Artificial Bee Colony Algorithm with a modified scout bee that searches for result near the best solution instead of random search";
+		Print.writeResult("test.txt", "cy15267", "26733", "Chuanyu Yang", description, beeColony.lowestCost, beeColony.bestSolution);
 	}
 	public static void main(String[] args) throws IOException
 	{
 		ABC abc = new ABC();
 		abc.runABC();
+
 	}
 }
