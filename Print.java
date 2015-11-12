@@ -2,10 +2,15 @@ package CVRP;
 import java.util.ArrayList;
 import java.util.List;
 import java.lang.String;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 
@@ -69,7 +74,7 @@ public class Print
 	        w.newLine();
 	        w.write("name "+name);
 	        w.newLine();
-	        w.write(description);
+	        w.write("algorithm "+description);
 	        w.newLine();
 	        w.write("cost "+ String.format("%.3f", lowestCost));
 	        w.newLine();
@@ -108,5 +113,49 @@ public class Print
         {
         	System.err.println("Problem writing to the file "+fileName);
         }    	
+    }
+    
+	static FileInputStream inStream; // = new FileInputStream("best-solution.txt");
+    static DataInputStream dStream;
+    static BufferedReader reader;    
+    	 
+    public static ArrayList<Integer> readResult(String fileName)
+    {
+    	 ArrayList<Integer> route = new ArrayList<Integer>();
+
+    	 try
+    	 {
+    		 inStream = new FileInputStream(fileName);
+    		 dStream = new DataInputStream(inStream);
+    		 reader = new BufferedReader(new InputStreamReader(inStream));
+
+    		 String line;
+    		 String delim = "->";
+    		 //route.add(1);
+    		 while ((line = reader.readLine()) != null)
+    		 {
+    			 //route = new ArrayList<Integer>();
+
+    			 if (line.startsWith("login") || line.startsWith("name") || line.startsWith("algorithm") || line.startsWith("cost"))
+    				 continue;
+
+    			 String[] tokens = line.split(delim);
+    			 for (int i = 0; i < tokens.length-1; i++)
+    			 {
+    				 //route.add(new Integer(tokens[i]));	
+    				 route.add(Integer.valueOf(tokens[i]));
+    			 }
+    		 } 
+    		 route.add(1);
+    	 }
+    	 catch (FileNotFoundException e)
+    	 {
+    		 System.err.println("Error: best-solution.txt not found.");
+    	 }
+    	 catch (IOException e)
+    	 {
+    		 System.err.println("Error whilst reading from best-solution.txt. Is it formatted correctly?");
+    	 }
+    	 return route;
     }
 }
